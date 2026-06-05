@@ -96,9 +96,7 @@ Split CSV files are provided in this repository under `data/`.
 ### FineGym99
 
 Download from the [FineGym project page](https://sdolivia.github.io/FineGym/).  
-We use the **filtered split** (20,483 → 26,319 train / 8,520 val after restoring
-all annotated clips). The full annotation list is `gym99train_filtered.csv`;
-some clips may be unavailable due to YouTube takedowns — simply skip missing files.
+We use the **v1.1** temporal annotation split: 26,319 train / 8,520 val across 99 classes.
 
 Organise videos as:
 ```
@@ -113,7 +111,7 @@ gym99/
 ### FineGym288
 
 Download from the [FineGym project page](https://sdolivia.github.io/FineGym/).  
-Split: 29,333 train / 9,645 val across 288 classes.
+We use the **v1.1** temporal annotation split: 29,333 train / 9,645 val across 288 classes.
 
 ```
 gym288/
@@ -257,13 +255,6 @@ The backbone is loaded from `torch.hub` (moabitcoin/ig65m-pytorch).
 | Optimiser | Adam, lr = 1e-5 |
 | LR schedule | Cosine annealing |
 | Loss | Cross-entropy |
-
-### FineGym Dataset Note
-
-The FineGym99 annotation list contains 26,319 training clips. A subset of these
-may be unavailable due to YouTube content removal. We provide the full annotation
-CSV (`gym99train_filtered.csv`) and recommend downloading all listed clips;
-the data loader skips files that are not found on disk.
 
 ---
 
