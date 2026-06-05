@@ -18,7 +18,7 @@ Example usage:
     python evaluate.py --dataset gym288 \
         --csv      /path/to/FineGym288_val.csv \
         --video_dir /path/to/gym288/videos/ \
-        --weights  weights/gym288_last.pth
+        --weights  weights/gym288_best.pth
 """
 
 import argparse

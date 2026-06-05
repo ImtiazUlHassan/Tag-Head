@@ -140,7 +140,7 @@ Download pretrained checkpoints and place them in `weights/`:
 |---|---|---|---|
 | `haa500_best.pth` | HAA500 | 86.1% | — |
 | `gym99_best.pth` | FineGym99 | 95.6% | 93.8% |
-| `gym288_last.pth` | FineGym288 | 92.2% | 68.6% |
+| `gym288_best.pth` | FineGym288 | 92.2% | 68.6% |
 
 > **Download:** https://drive.google.com/drive/folders/18Hv0Y83Yo0GHg_pydtWV08P0Bbvcqhuv?usp=sharing
 
@@ -171,7 +171,7 @@ python evaluate.py \
     --dataset   gym288 \
     --csv       data/FineGym288_val.csv \
     --video_dir /path/to/gym288/videos/ \
-    --weights   weights/gym288_last.pth
+    --weights   weights/gym288_best.pth
 ```
 
 Expected output format:
