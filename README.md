@@ -148,7 +148,7 @@ Download pretrained checkpoints and place them in `weights/`:
 | `gym99_best.pth` | FineGym99 | 95.6% | 93.8% |
 | `gym288_last.pth` | FineGym288 | 92.2% | 68.6% |
 
-> **Download:** _[link to be added]_
+> **Download:** https://drive.google.com/drive/folders/18Hv0Y83Yo0GHg_pydtWV08P0Bbvcqhuv?usp=sharing
 
 The R(2+1)D-34 backbone weights (pretrained on IG-65M) are downloaded
 automatically via `torch.hub` on first run — internet access is required.
