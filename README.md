@@ -3,8 +3,6 @@
 **ICPR 2026** | Imtiaz Ul Hassan, Nik Bessis, Ardhendu Behera  
 Department of Computer Science, Edge Hill University
 
-> *Code will be released on GitHub.*  — as stated in the paper abstract.
-
 ---
 
 ## Overview
