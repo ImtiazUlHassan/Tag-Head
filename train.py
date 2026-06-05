@@ -31,7 +31,7 @@ from nvidia.dali.plugin.pytorch import DALIGenericIterator
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
 from data_utils import (
-    decode_filename, get_train_transforms, get_val_transforms,
+    get_train_transforms, get_val_transforms,
     load_video_metadata, set_seed, uniform_sample, video_pipe,
 )
 from model import DATASET_CONFIGS, build_model
@@ -94,7 +94,7 @@ def make_loader(csv_path, video_dir, shuffle):
 
 
 def collect_batch(loader, boundaries, total_frames, num_frames,
-                  transform, processed, batch_size):
+                  transform, batch_size):
     """
     Iterate over DALI output and collect one batch of (video, label) pairs.
     Returns a generator that yields (videos_tensor, labels_tensor) batches.
@@ -145,7 +145,7 @@ def run_epoch(model, loader, total_frames, boundaries, num_frames,
     with ctx:
         for videos, labels in collect_batch(
             loader, boundaries, total_frames, num_frames,
-            transform, 0, batch_size
+            transform, batch_size
         ):
             outputs = model(videos)
             loss = criterion(outputs, labels)
@@ -212,11 +212,6 @@ def main():
         start_epoch   = ckpt["epoch"] + 1
         best_val_acc  = ckpt.get("best_val_acc", 0.0)
         print(f"Resumed from epoch {start_epoch}, best val acc {best_val_acc:.2f}%")
-
-    # Pre-load validation data (no shuffle)
-    val_loader, _, _, val_total_frames, val_boundaries = make_loader(
-        args.csv_val, args.video_dir, shuffle=False
-    )
 
     for epoch in range(start_epoch, epochs):
         # Re-shuffle training data each epoch
