@@ -18,7 +18,7 @@ The head applies:
 4. **APPNP propagation** for parameter-free feature refinement
 5. **Global mean pooling** + linear classifier
 
-![TAG-Head architecture](paper/Tag-Head/figures/fig2.png)
+![TAG-Head architecture](assets/architecture.png)
 
 ---
 
