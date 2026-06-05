@@ -93,14 +93,22 @@ video_clip.mp4,ClassName,64,0
 
 Split CSV files are provided in this repository under `data/`.
 
-### FineGym99
+### FineGym99 & FineGym288
 
-Download from the [FineGym project page](https://sdolivia.github.io/FineGym/).  
-We use the **v1.1** temporal annotation split: 26,319 train / 8,520 val across 99 classes.
+> **Citation:** Shao, Dian, et al. "FineGym: A Hierarchical Video Dataset for Fine-grained Action Understanding." CVPR 2020.
 
-Organise videos as:
+1. Download the raw YouTube videos and temporal annotations from the [FineGym project page](https://sdolivia.github.io/FineGym/).
+2. Extract action clips using the v1.1 temporal annotations. We provide a ready-to-use extraction script here:  
+   **[https://github.com/ImtiazUlHassan/FinegymVideoextractions](https://github.com/ImtiazUlHassan/FinegymVideoextractions)**
+
+| Split | Train | Val | Classes |
+|---|---|---|---|
+| FineGym99 (v1.1) | 26,319 | 8,520 | 99 |
+| FineGym288 (v1.1) | 29,333 | 9,645 | 288 |
+
+Organise extracted clips as:
 ```
-gym99/
+gym99/          (or gym288/)
 └── videos/
     ├── {class_id}/
     │   ├── clip1.mp4
@@ -108,19 +116,9 @@ gym99/
     └── ...
 ```
 
-### FineGym288
-
-Download from the [FineGym project page](https://sdolivia.github.io/FineGym/).  
-We use the **v1.1** temporal annotation split: 29,333 train / 9,645 val across 288 classes.
-
-```
-gym288/
-└── videos/
-    ├── {class_id}/
-    └── ...
-```
-
 ### HAA500
+
+> **Citation:** Chung, Jihoon, et al. "HAA500: Human-Centric Atomic Action Dataset with Curated Videos." ICCV 2021.
 
 Download from the [HAA500 project page](https://www.cse.ust.hk/haa/).  
 Split: 8,000 train / 500 val / 1,500 test across 500 classes.
@@ -288,6 +286,20 @@ TAG-Head/
   author    = {Hassan, Imtiaz Ul and Bessis, Nik and Behera, Ardhendu},
   booktitle = {Proceedings of the International Conference on Pattern Recognition (ICPR)},
   year      = {2026}
+}
+
+@inproceedings{shao2020finegym,
+  title     = {FineGym: A Hierarchical Video Dataset for Fine-grained Action Understanding},
+  author    = {Shao, Dian and Zhao, Yue and Dai, Bo and Loy, Chen Change},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2020}
+}
+
+@inproceedings{chung2021haa500,
+  title     = {HAA500: Human-Centric Atomic Action Dataset with Curated Videos},
+  author    = {Chung, Jihoon and Cho, Cheng-hsin and Yun, Hyunjeong and Park, Seongheon and Kim, Yooshin and Kwak, Suha},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  year      = {2021}
 }
 ```
 
