@@ -1,0 +1,22 @@
+# Core deep learning
+torch>=2.1.0
+torchvision>=0.16.0
+
+# PyTorch Geometric (install matching your CUDA version — see README)
+torch-geometric>=2.4.0
+torch-scatter
+torch-sparse
+
+# Video data loading
+# Replace 'cuda120' with your CUDA version (e.g. cuda118, cuda121)
+nvidia-dali-cuda120
+
+# Video transforms
+pytorchvideo>=0.1.5
+
+# Data handling
+pandas>=1.5.0
+numpy>=1.23.0
+
+# Optional: experiment tracking
+wandb>=0.16.0
