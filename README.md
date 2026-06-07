@@ -93,10 +93,18 @@ pip install nvidia-dali-cuda120
 pip install nvidia-dali-cuda110
 ```
 
-### 6. Install remaining dependencies
+### 6. Install PyTorchVideo
+
+> **Important:** Install from the GitHub source — the PyPI version is outdated and may not work correctly.
 
 ```bash
-pip install pytorchvideo pandas numpy wandb
+pip install "git+https://github.com/facebookresearch/pytorchvideo.git"
+```
+
+### 7. Install remaining dependencies
+
+```bash
+pip install pandas numpy wandb
 ```
 
 ---
