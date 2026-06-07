@@ -4,21 +4,21 @@ TAG-Head evaluation script — computes Top-1 accuracy and Mean Class Accuracy (
 Example usage:
     # Evaluate HAA500 on the test split
     python evaluate.py --dataset haa500 \
-        --csv      /path/to/haa500test.csv \
+        --csv       data/haa500test.csv \
         --video_dir /path/to/haa500/videos/ \
-        --weights  weights/haa500_best.pth
+        --weights   weights/haa500_best.pth
 
     # Evaluate Gym99 on the validation split
     python evaluate.py --dataset gym99 \
-        --csv      /path/to/gym99val_filtered.csv \
+        --csv       data/gym99val_filtered.csv \
         --video_dir /path/to/gym99/videos/ \
-        --weights  weights/gym99_best.pth
+        --weights   weights/gym99_best.pth
 
     # Evaluate Gym288 on the validation split
     python evaluate.py --dataset gym288 \
-        --csv      /path/to/FineGym288_val.csv \
+        --csv       data/FineGym288_val.csv \
         --video_dir /path/to/gym288/videos/ \
-        --weights  weights/gym288_best.pth
+        --weights   weights/gym288_best.pth
 """
 
 import argparse
@@ -58,7 +58,6 @@ def evaluate(model, csv_path, video_dir, num_frames, num_classes):
         reader_name="Reader",
     )
 
-    # Per-class accumulators for MCA
     class_correct = defaultdict(int)
     class_total   = defaultdict(int)
     overall_correct, overall_total = 0, 0
@@ -91,7 +90,6 @@ def evaluate(model, csv_path, video_dir, num_frames, num_classes):
 
     top1 = 100.0 * overall_correct / overall_total
 
-    # MCA: mean of per-class accuracy
     per_class_acc = [
         class_correct[c] / class_total[c]
         for c in range(num_classes)
@@ -106,15 +104,13 @@ def main():
     args = parse_args()
     set_seed(args.seed)
 
-    cfg        = DATASET_CONFIGS[args.dataset]
-    num_frames = cfg["num_frames"]
+    cfg         = DATASET_CONFIGS[args.dataset]
+    num_frames  = cfg["num_frames"]
     num_classes = cfg["num_classes"]
 
-    # Build model and load weights
     model = build_model(args.dataset).cuda()
 
     state = torch.load(args.weights, map_location="cuda")
-    # Support both bare state-dicts and checkpoint dicts
     if "model_state_dict" in state:
         state = state["model_state_dict"]
     model.load_state_dict(state)

@@ -53,27 +53,49 @@ conda activate taghead
 
 ### 3. Install PyTorch
 
-Install PyTorch matching your CUDA version from [pytorch.org](https://pytorch.org/get-started/locally/).  
-The paper experiments used **Python 3.12**, **PyTorch 2.x**, **CUDA 12.x**.
+The paper experiments used **Python 3.12**, **PyTorch 2.x**, **CUDA 12.x**.  
+Visit [pytorch.org](https://pytorch.org/get-started/locally/) to get the exact command for your CUDA version.
 
 ```bash
+# CUDA 12.1
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# CUDA 11.8
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+```
+
+Verify your installation:
+```bash
+python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 ```
 
 ### 4. Install PyTorch Geometric
 
+Match the URLs to your installed PyTorch and CUDA versions:
+
 ```bash
 pip install torch-geometric
+
+# Replace torch-2.1.0+cu121 with your torch+cuda combination
 pip install torch-scatter torch-sparse \
     -f https://data.pyg.org/whl/torch-2.1.0+cu121.html
 ```
 
-> Adjust the PyTorch and CUDA version in the URL to match your installation.
+Find the correct wheel at: https://data.pyg.org/whl/
 
-### 5. Install remaining dependencies
+### 5. Install NVIDIA DALI
 
 ```bash
-pip install nvidia-dali-cuda120   # or cuda118 / cuda121 depending on your setup
+# CUDA 12.x
+pip install nvidia-dali-cuda120
+
+# CUDA 11.x
+pip install nvidia-dali-cuda110
+```
+
+### 6. Install remaining dependencies
+
+```bash
 pip install pytorchvideo pandas numpy wandb
 ```
 
@@ -129,6 +151,36 @@ haa500/
     │   └── ...
     └── ...
 ```
+
+### Video Codec Requirement
+
+The DALI video reader requires **all videos in a dataset to use the same codec** (H.264 is recommended). Mixed-codec datasets will cause a runtime error.
+
+**Check codecs in your dataset:**
+```bash
+find /path/to/videos/ -name "*.mp4" | \
+  xargs -P8 -I{} ffprobe -v quiet -select_streams v:0 \
+    -show_entries stream=codec_name -of csv=p=0 {} 2>/dev/null | \
+  sort | uniq -c
+```
+
+**Convert any non-H.264 videos to H.264:**
+```bash
+# Find non-H.264 files
+find /path/to/videos/ -name "*.mp4" | \
+  xargs -P8 -I{} sh -c \
+  'codec=$(ffprobe -v quiet -select_streams v:0 -show_entries stream=codec_name -of csv=p=0 "{}" 2>/dev/null); [ "$codec" != "h264" ] && echo "{}"' \
+  > non_h264.txt
+
+# Convert each one in-place
+while read f; do
+  tmp="${f%.mp4}_tmp.mp4"
+  ffmpeg -y -i "$f" -c:v libx264 -crf 18 -preset fast -an "$tmp" && mv "$tmp" "$f"
+  echo "Converted: $f"
+done < non_h264.txt
+```
+
+> For HAA500, we found 6 out of 10,000 videos encoded as MPEG-4 — these must be converted before running training or evaluation.
 
 ---
 

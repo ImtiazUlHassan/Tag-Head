@@ -54,7 +54,7 @@ class TAGHead(nn.Module):
     ):
         super().__init__()
 
-        self.backbone = _build_backbone()
+        self.csnmodel = _build_backbone()
 
         T, H, W = num_temporal_tokens, 7, 7
         N = T * H * W  # total graph nodes
@@ -74,14 +74,14 @@ class TAGHead(nn.Module):
             encoder_layer, num_layers=num_transformer_layers
         )
 
-        # Pre-compute and register graph edges (no learnable params)
-        self.register_buffer("edge_index", _build_edge_index(T, H, W))
+        # Pre-compute graph edges (no learnable params)
+        self.edge_indexes = _build_edge_index(T, H, W)
 
         # APPNP (parameter-free propagation)
         self.appnp = APPNP(K=appnp_k, alpha=appnp_alpha)
 
         # Classifier
-        self.classifier = nn.Sequential(
+        self.mlp_head = nn.Sequential(
             nn.LayerNorm(d_model),
             nn.Linear(d_model, num_classes),
         )
@@ -94,7 +94,7 @@ class TAGHead(nn.Module):
             logits: [B, num_classes]
         """
         # Backbone -> [B, 512, T, 7, 7]
-        features = self.backbone(x)
+        features = self.csnmodel(x)
         B = features.shape[0]
 
         # Flatten to token sequence -> [B, N, 512]
@@ -107,7 +107,8 @@ class TAGHead(nn.Module):
         tokens = self.transformer(tokens)
 
         # Build graph batch
-        graphs = [Data(x=tokens[i], edge_index=self.edge_index) for i in range(B)]
+        edge_idx = self.edge_indexes.to(features.device)
+        graphs = [Data(x=tokens[i], edge_index=edge_idx) for i in range(B)]
         batch = Batch.from_data_list(graphs)
 
         # APPNP feature refinement
@@ -116,7 +117,7 @@ class TAGHead(nn.Module):
         # Global spatio-temporal mean pooling -> [B, 512]
         h = global_mean_pool(h, batch.batch)
 
-        return self.classifier(h)
+        return self.mlp_head(h)
 
 
 def _build_edge_index(T: int, H: int, W: int) -> torch.Tensor:
