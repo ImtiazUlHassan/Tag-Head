@@ -211,6 +211,15 @@ automatically via `torch.hub` on first run — internet access is required.
 
 ## Evaluation (Pretrained Weights)
 
+We provide two evaluation scripts with identical results:
+
+| Script | Backend | Requirement | Note |
+|---|---|---|---|
+| `evaluate.py` | NVIDIA DALI | Requires DALI + all videos H.264 | Reproduces exact paper results |
+| `evaluate_decord.py` | Decord | `pip install decord` — codec-agnostic | ~1-2% lower due to resize differences |
+
+### Using DALI (default)
+
 ```bash
 # HAA500 — evaluate on test split
 python evaluate.py \
@@ -234,11 +243,27 @@ python evaluate.py \
     --weights   weights/gym288_best.pth
 ```
 
-Expected output format:
+### Using Decord (alternative)
+
+If you have trouble installing DALI, use the Decord-based script instead.  
+Simply replace `evaluate.py` with `evaluate_decord.py` — all arguments are identical:
+
+```bash
+pip install decord
+
+python evaluate_decord.py \
+    --dataset   haa500 \
+    --csv       data/haa500test.csv \
+    --video_dir /path/to/haa500/videos/ \
+    --weights   weights/haa500_best.pth
+```
+
+### Expected output
+
 ```
 Dataset : HAA500
 Top-1   : 86.1%
-MCA     : --
+MCA     : 86.1%
 ```
 
 ---
